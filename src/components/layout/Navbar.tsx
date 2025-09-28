@@ -1,15 +1,16 @@
 import { useState } from 'react';
-import { Search, User, ShoppingCart, Menu, X, Calendar, Heart } from 'lucide-react';
+import { Search, User, ShoppingCart, Menu, X, Calendar, Heart, Settings } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ThemeToggle } from '../ui/theme-toggle';
 import { RoleSwitcher } from '../ui/role-switcher';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 import { setSearchTerm } from '../../store/slices/productsSlice';
-import { loginSuccess } from '../../store/slices/authSlice';
+import { loginSuccess, logout } from '../../store/slices/authSlice';
 
 interface NavbarProps {
   searchTerm?: string;
@@ -32,6 +33,9 @@ export const Navbar = ({ searchTerm: propSearchTerm, onSearchChange }: NavbarPro
       onSearchChange(term);
     } else {
       dispatch(setSearchTerm(term));
+      if (term.trim()) {
+        navigate('/products');
+      }
     }
   };
 
@@ -45,6 +49,11 @@ export const Navbar = ({ searchTerm: propSearchTerm, onSearchChange }: NavbarPro
       role: 'renter'
     }));
     setIsAccountOpen(false);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/');
   };
 
   const AccountModal = () => (
@@ -165,10 +174,25 @@ export const Navbar = ({ searchTerm: propSearchTerm, onSearchChange }: NavbarPro
             )}
             
             {isAuthenticated ? (
-              <div className="flex items-center space-x-2">
-                <img src={user?.avatar} alt={user?.name} className="w-8 h-8 rounded-full" />
-                <span className="hidden sm:inline text-sm font-medium">{user?.name}</span>
-              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="flex items-center space-x-2">
+                    <img src={user?.avatar} alt={user?.name} className="w-8 h-8 rounded-full" />
+                    <span className="hidden sm:inline text-sm font-medium">{user?.name}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="flex items-center">
+                      <Settings className="h-4 w-4 mr-2" />
+                      Profile Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <Dialog open={isAccountOpen} onOpenChange={setIsAccountOpen}>
                 <DialogTrigger asChild>

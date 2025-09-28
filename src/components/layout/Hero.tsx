@@ -1,8 +1,21 @@
 import { ArrowRight, Play, Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
+import { useAppSelector } from '../../hooks';
 
 export const Hero = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+
+  const handleStartBrowsing = () => {
+    if (isAuthenticated && user?.role === 'host') {
+      navigate('/host/dashboard');
+    } else {
+      navigate('/products');
+    }
+  };
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
@@ -26,7 +39,7 @@ export const Hero = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="group">
+              <Button size="lg" className="group" onClick={handleStartBrowsing}>
                 Start Browsing
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>

@@ -8,7 +8,9 @@ import { Home } from './pages/Home';
 import { Products } from './pages/Products';
 import { ProductDetail } from './pages/ProductDetail';
 import { Favorites } from './pages/Favorites';
+import { Profile } from './pages/Profile';
 import { HostDashboard } from './pages/HostDashboard';
+import { HostKYC } from './pages/HostKYC';
 import { CreateProduct } from './pages/CreateProduct';
 import { Toaster } from '@/components/ui/toaster';
 
@@ -26,7 +28,9 @@ function App() {
                 <Route path="/products" element={<Products />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/favorites" element={<Favorites />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/host/dashboard" element={<HostDashboard />} />
+                <Route path="/host/kyc" element={<HostKYC />} />
                 <Route path="/host/create-product" element={<CreateProduct />} />
               </Routes>
             </main>
