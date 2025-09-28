@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Plus, Package, DollarSign, Calendar, Eye, CreditCard as Edit, Trash2, AlertCircle } from 'lucide-react';
+import { Plus, Package, DollarSign, Calendar, Eye, CreditCard as Edit, Trash2, CircleAlert as AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
