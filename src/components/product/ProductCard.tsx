@@ -6,10 +6,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { toggleFavorite } from '@/store/slices/productsSlice';
-import { useToast } from '@/hooks/use-toast';
-import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { useAppSelector } from '@/hooks/useAppSelector';
-import { toggleFavorite } from '@/store/slices/productsSlice';
 import { Product } from '../../types/product';
 
 interface ProductCardProps {
