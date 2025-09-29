@@ -98,6 +98,10 @@ export const AdminNavbar = () => {
 
           {/* Right Actions */}
           <div className="flex items-center space-x-2">
+            <Button variant="ghost" size="sm" onClick={() => navigate('/products')}>
+              <Search className="h-4 w-4" />
+            </Button>
+            
             <Link to="/notifications">
               <Button variant="ghost" size="sm" className="relative">
                 <Bell className="h-4 w-4" />

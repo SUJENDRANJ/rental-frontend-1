@@ -48,6 +48,9 @@ export const Navbar = ({ searchTerm: propSearchTerm, onSearchChange }: NavbarPro
     setLocalSearchTerm(term);
   };
 
+  const handleSearchClick = () => {
+    navigate('/products');
+  };
   const handleLogin = () => {
     // Mock login - in real app, this would be an API call
     dispatch(loginSuccess({
@@ -161,6 +164,10 @@ export const Navbar = ({ searchTerm: propSearchTerm, onSearchChange }: NavbarPro
           {/* Right Actions */}
           <div className="flex items-center space-x-2 ml-auto">
             <RoleSwitcher />
+            
+            <Button variant="ghost" size="sm" onClick={handleSearchClick}>
+              <Search className="h-4 w-4" />
+            </Button>
             
             {isAuthenticated && (
               <Link to="/notifications">
