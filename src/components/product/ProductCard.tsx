@@ -1,12 +1,8 @@
-<<<<<<< HEAD
 import { Star, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-=======
-import { Star, ShoppingCart, Heart } from 'lucide-react';
->>>>>>> 70f040f72447837a5ffadaf42629d679a045a770
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { toggleFavorite } from '@/store/slices/productsSlice';
 import { Product } from '../../types/product';
