@@ -11,6 +11,10 @@ interface ProductsState {
   sortBy: 'name' | 'price' | 'rating';
   sortOrder: 'asc' | 'desc';
   favorites: string[];
+  priceRange: [number, number];
+  selectedFeatures: string[];
+  availabilityFilter: 'all' | 'available' | 'unavailable';
+  locationFilter: string;
 }
 
 const initialState: ProductsState = {
@@ -23,6 +27,10 @@ const initialState: ProductsState = {
   sortBy: 'name',
   sortOrder: 'asc',
   favorites: [],
+  priceRange: [0, 1000],
+  selectedFeatures: [],
+  availabilityFilter: 'all',
+  locationFilter: '',
 };
 
 const productsSlice = createSlice({
@@ -65,6 +73,22 @@ const productsSlice = createSlice({
         state.favorites.push(productId);
       }
     },
+    setPriceRange: (state, action: PayloadAction<[number, number]>) => {
+      state.priceRange = action.payload;
+      state.currentPage = 1;
+    },
+    setSelectedFeatures: (state, action: PayloadAction<string[]>) => {
+      state.selectedFeatures = action.payload;
+      state.currentPage = 1;
+    },
+    setAvailabilityFilter: (state, action: PayloadAction<'all' | 'available' | 'unavailable'>) => {
+      state.availabilityFilter = action.payload;
+      state.currentPage = 1;
+    },
+    setLocationFilter: (state, action: PayloadAction<string>) => {
+      state.locationFilter = action.payload;
+      state.currentPage = 1;
+    },
   },
 });
 
@@ -78,6 +102,10 @@ export const {
   setSortBy,
   setSortOrder,
   toggleFavorite,
+  setPriceRange,
+  setSelectedFeatures,
+  setAvailabilityFilter,
+  setLocationFilter,
 } = productsSlice.actions;
 
 export default productsSlice.reducer;

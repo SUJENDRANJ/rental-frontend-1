@@ -9,13 +9,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { useToast } from '../hooks/use-toast';
-import { useAppSelector } from '../hooks';
+import { useAppSelector, useAppDispatch } from '../hooks';
+import { setProducts } from '../store/slices/productsSlice';
 import { categories } from '../data/products';
 
 export const CreateProduct = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const dispatch = useAppDispatch();
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+  const { products } = useAppSelector((state) => state.products);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -86,6 +89,41 @@ export const CreateProduct = () => {
     }
 
     // Mock product creation - in real app, this would be an API call
+    const newProduct = {
+      id: Date.now().toString(),
+      name: formData.name,
+      description: formData.description,
+      price: parseFloat(formData.price),
+      pricePerWeek: formData.pricePerWeek ? parseFloat(formData.pricePerWeek) : undefined,
+      pricePerMonth: formData.pricePerMonth ? parseFloat(formData.pricePerMonth) : undefined,
+      rating: 0,
+      reviewCount: 0,
+      image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=800',
+      category: formData.category,
+      inStock: true,
+      stockCount: parseInt(formData.stockCount),
+      tags: selectedTags,
+      location: {
+        lat: 40.7128,
+        lng: -74.0060,
+        address: formData.address,
+        city: formData.city,
+        country: formData.country
+      },
+      owner: {
+        id: user.id,
+        name: user.name,
+        avatar: user.avatar,
+        rating: 4.8
+      },
+      features: selectedFeatures,
+      minRentalDays: parseInt(formData.minRentalDays),
+      maxRentalDays: parseInt(formData.maxRentalDays)
+    };
+
+    // Add to products list
+    dispatch(setProducts([...products, newProduct]));
+    
     toast({
       title: "Product Created Successfully!",
       description: "Your product has been added to the marketplace.",

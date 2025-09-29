@@ -6,6 +6,7 @@ interface User {
   email: string;
   avatar?: string;
   role: 'renter' | 'host';
+  kycStatus?: 'pending' | 'approved' | 'rejected';
 }
 
 interface AuthState {

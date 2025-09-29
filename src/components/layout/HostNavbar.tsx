@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, User, ShoppingCart, Menu, X, Calendar, Heart, Settings, Bell } from 'lucide-react';
+import { Search, User, Menu, X, Plus, Package, ChartBar as BarChart3, Settings, Bell } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,19 +14,18 @@ import { setSearchTerm } from '../../store/slices/productsSlice';
 import { useDebounce } from '../../hooks/useDebounce';
 import { loginSuccess, logout } from '../../store/slices/authSlice';
 
-interface NavbarProps {
+interface HostNavbarProps {
   searchTerm?: string;
   onSearchChange?: (term: string) => void;
 }
 
-export const Navbar = ({ searchTerm: propSearchTerm, onSearchChange }: NavbarProps) => {
+export const HostNavbar = ({ searchTerm: propSearchTerm, onSearchChange }: HostNavbarProps) => {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   
   const { searchTerm: storeSearchTerm } = useAppSelector((state) => state.products);
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
-  const { rentals } = useAppSelector((state) => state.rental);
   const [localSearchTerm, setLocalSearchTerm] = useState(propSearchTerm ?? storeSearchTerm);
   const debouncedSearchTerm = useDebounce(localSearchTerm, 300);
   
@@ -49,13 +48,12 @@ export const Navbar = ({ searchTerm: propSearchTerm, onSearchChange }: NavbarPro
   };
 
   const handleLogin = () => {
-    // Mock login - in real app, this would be an API call
     dispatch(loginSuccess({
       id: '1',
       name: 'John Doe',
       email: 'john@example.com',
       avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100',
-      role: 'renter'
+      role: 'host'
     }));
     setIsAccountOpen(false);
   };
@@ -68,7 +66,7 @@ export const Navbar = ({ searchTerm: propSearchTerm, onSearchChange }: NavbarPro
   const AccountModal = () => (
     <DialogContent className="sm:max-w-md">
       <DialogHeader>
-        <DialogTitle>Account Access</DialogTitle>
+        <DialogTitle>Host Account Access</DialogTitle>
       </DialogHeader>
       <div className="space-y-4">
         <div className="space-y-2">
@@ -91,13 +89,20 @@ export const Navbar = ({ searchTerm: propSearchTerm, onSearchChange }: NavbarPro
     <SheetContent side="left" className="w-80">
       <div className="space-y-6 mt-8">
         <div className="space-y-2">
-          <h3 className="font-medium">Categories</h3>
+          <h3 className="font-medium">Host Menu</h3>
           <nav className="space-y-1">
-            {['Electronics', 'Wearables', 'Photography', 'Gaming', 'Lifestyle'].map((category) => (
-              <Link key={category} to="/products" className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground rounded-md hover:bg-accent">
-                {category}
-              </Link>
-            ))}
+            <Link to="/host/dashboard" className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground rounded-md hover:bg-accent">
+              <Package className="h-4 w-4 inline mr-2" />
+              Dashboard
+            </Link>
+            <Link to="/host/create-product" className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground rounded-md hover:bg-accent">
+              <Plus className="h-4 w-4 inline mr-2" />
+              Add Product
+            </Link>
+            <Link to="/host/analytics" className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground rounded-md hover:bg-accent">
+              <BarChart3 className="h-4 w-4 inline mr-2" />
+              Analytics
+            </Link>
           </nav>
         </div>
         <div className="space-y-2">
@@ -139,48 +144,42 @@ export const Navbar = ({ searchTerm: propSearchTerm, onSearchChange }: NavbarPro
 
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              RentHub
+            <Link to="/host/dashboard" className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              RentHub Host
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-sm font-medium transition-colors hover:text-primary">Home</Link>
-            <Link to="/products" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Browse</Link>
-            {user?.role === 'host' ? (
-              <Link to="/host/dashboard" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Dashboard</Link>
-            ) : (
-              <Link to="/favorites" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Favorites</Link>
-            )}
-            <a href="#" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Categories</a>
-            <a href="#" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">How it Works</a>
-            <a href="#" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Support</a>
+            <Link to="/host/dashboard" className="text-sm font-medium transition-colors hover:text-primary">
+              <Package className="h-4 w-4 inline mr-2" />
+              Dashboard
+            </Link>
+            <Link to="/host/create-product" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+              <Plus className="h-4 w-4 inline mr-2" />
+              Add Product
+            </Link>
+            <Link to="/host/analytics" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+              <BarChart3 className="h-4 w-4 inline mr-2" />
+              Analytics
+            </Link>
+            <Link to="/products" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+              Browse Marketplace
+            </Link>
           </nav>
 
           {/* Right Actions */}
           <div className="flex items-center space-x-2 ml-auto">
             <RoleSwitcher />
             
-            {isAuthenticated && (
-              <Link to="/notifications">
-                <Button variant="ghost" size="sm" className="relative">
-                  <Bell className="h-4 w-4" />
-                  <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs">
-                    3
-                  </Badge>
-                </Button>
-              </Link>
-            )}
-            
-            {isAuthenticated && user?.role === 'renter' && (
-              <Link to="/favorites">
-                <Button variant="ghost" size="sm" className="relative">
-                  <Heart className="h-4 w-4" />
-                  {/* You can add a badge here for favorite count */}
-                </Button>
-              </Link>
-            )}
+            <Link to="/notifications">
+              <Button variant="ghost" size="sm" className="relative">
+                <Bell className="h-4 w-4" />
+                <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs">
+                  2
+                </Badge>
+              </Button>
+            </Link>
             
             {isAuthenticated ? (
               <DropdownMenu>
@@ -192,15 +191,9 @@ export const Navbar = ({ searchTerm: propSearchTerm, onSearchChange }: NavbarPro
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem asChild>
-                    <Link to="/profile" className="flex items-center">
+                    <Link to="/host/profile" className="flex items-center">
                       <Settings className="h-4 w-4 mr-2" />
-                      Profile Settings
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/my-rentals" className="flex items-center">
-                      <Calendar className="h-4 w-4 mr-2" />
-                      My Rentals
+                      Host Profile
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout}>
@@ -218,19 +211,6 @@ export const Navbar = ({ searchTerm: propSearchTerm, onSearchChange }: NavbarPro
                 </DialogTrigger>
                 <AccountModal />
               </Dialog>
-            )}
-
-            {isAuthenticated && (
-              <Link to="/my-rentals">
-                <Button variant="ghost" size="sm" className="relative">
-                  <Calendar className="h-4 w-4" />
-                  {rentals.length > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                      {rentals.length}
-                    </span>
-                  )}
-                </Button>
-              </Link>
             )}
             
             <ThemeToggle />

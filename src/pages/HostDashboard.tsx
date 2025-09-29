@@ -1,16 +1,20 @@
 import { useState, useMemo } from 'react';
-import { Plus, Package, DollarSign, Calendar, Eye, CreditCard as Edit, Trash2 } from 'lucide-react';
+import { Plus, Package, DollarSign, Calendar, Eye, CreditCard as Edit, Trash2, CircleAlert as AlertCircle, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { Alert, AlertDescription } from '../components/ui/alert';
 import { useAppSelector } from '../hooks';
 import { mockProducts } from '../data/products';
 
 export const HostDashboard = () => {
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState('overview');
+  
+  // Check if profile is complete
+  const isProfileComplete = user?.name && user?.email; // Simplified check
 
   // Mock hosted products - in real app, this would come from API
   const hostedProducts = useMemo(() => {
@@ -34,12 +38,25 @@ export const HostDashboard = () => {
   if (!isAuthenticated || user?.role !== 'host') {
     return (
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center py-12">
-          <Package className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-          <h1 className="text-2xl font-bold mb-2">Host Access Required</h1>
-          <p className="text-muted-foreground">
-            Please sign in as a host to access the dashboard.
-          </p>
+        <div className="max-w-md mx-auto">
+          <Alert>
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              You need to complete KYC verification to become a host.
+            </AlertDescription>
+          </Alert>
+          <div className="text-center py-12">
+            <Package className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
+            <h1 className="text-2xl font-bold mb-2">Become a Host</h1>
+            <p className="text-muted-foreground mb-6">
+              Complete your KYC verification to start hosting items.
+            </p>
+            <Link to="/host/kyc">
+              <Button size="lg">
+                Start KYC Verification
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -70,6 +87,21 @@ export const HostDashboard = () => {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
+          {/* Profile Completion Alert */}
+          {!isProfileComplete && (
+            <Alert>
+              <User className="h-4 w-4" />
+              <AlertDescription className="flex items-center justify-between">
+                <span>Complete your profile to increase trust with renters and get more bookings.</span>
+                <Link to="/host/complete-profile">
+                  <Button size="sm" className="ml-4">
+                    Complete Profile
+                  </Button>
+                </Link>
+              </AlertDescription>
+            </Alert>
+          )}
+          
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card>

@@ -1,6 +1,7 @@
-import { Users, Chrome as Home } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from './button';
 import { Badge } from './badge';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 import { switchRole, logout } from '../../store/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
@@ -10,10 +11,11 @@ export const RoleSwitcher = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  if (!isAuthenticated || !user) return null;
+  if (!isAuthenticated || !user) {
+    return null;
+  }
 
-  const handleRoleSwitch = () => {
-    const newRole = user.role === 'renter' ? 'host' : 'renter';
+  const handleRoleSwitch = (newRole: 'renter' | 'host') => {
     dispatch(switchRole(newRole));
     
     // Navigate to appropriate page based on role
@@ -24,33 +26,29 @@ export const RoleSwitcher = () => {
     }
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate('/');
-  };
-
   return (
-    <div className="flex items-center space-x-2">
-      <Badge variant={user.role === 'host' ? 'default' : 'secondary'}>
-        {user.role === 'host' ? 'Hosting' : 'Renting'}
-      </Badge>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={handleRoleSwitch}
-        className="h-8 px-2"
-      >
-        {user.role === 'renter' ? (
-          <Home className="h-4 w-4 mr-1" />
-        ) : (
-          <Users className="h-4 w-4 mr-1" />
-        )}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleLogout} className="text-red-600">
-            Logout
-          </DropdownMenuItem>
-        Switch to {user.role === 'renter' ? 'Host' : 'Rent'}
-      </Button>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="sm" className="flex items-center gap-2">
+          <Badge variant={user.role === 'host' ? 'default' : 'secondary'}>
+            {user.role === 'host' ? 'Host' : 'Renter'}
+          </Badge>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem 
+          onClick={() => handleRoleSwitch('renter')}
+          disabled={user.role === 'renter'}
+        >
+          Switch to Renter
+        </DropdownMenuItem>
+        <DropdownMenuItem 
+          onClick={() => handleRoleSwitch('host')}
+          disabled={user.role === 'host'}
+        >
+          Switch to Host
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
