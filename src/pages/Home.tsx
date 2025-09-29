@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
 import { Hero } from '../components/layout/Hero';
+<<<<<<< HEAD
 import { HomeBanners } from '../components/layout/HomeBanners';
+=======
+>>>>>>> 70f040f72447837a5ffadaf42629d679a045a770
 import { SkeletonHero } from '../components/ui/skeleton-hero';
 import { ProductGrid } from '../components/product/ProductGrid';
 import { ProductFilters } from '../components/product/ProductFilters';
@@ -130,9 +133,12 @@ export const Home = () => {
     <>
       {/* Hero Section */}
       {loading ? <SkeletonHero /> : <Hero />}
+<<<<<<< HEAD
 
       {/* Banners Section */}
       <HomeBanners />
+=======
+>>>>>>> 70f040f72447837a5ffadaf42629d679a045a770
 
       {/* Featured Products Section */}
       <section className="py-12 lg:py-16">
@@ -169,6 +175,7 @@ export const Home = () => {
               onSortChange={(sort) => dispatch(setSortBy(sort))}
               onSortOrderChange={(order) => dispatch(setSortOrder(order))}
               totalProducts={filteredProducts.length}
+<<<<<<< HEAD
               priceRange={priceRange}
               onPriceRangeChange={(range) => dispatch(setPriceRange(range))}
               selectedFeatures={selectedFeatures}
@@ -179,6 +186,8 @@ export const Home = () => {
               onLocationChange={(location) => dispatch(setLocationFilter(location))}
               searchTerm={searchTerm}
               onSearchChange={(search) => dispatch(setSearchTerm(search))}
+=======
+>>>>>>> 70f040f72447837a5ffadaf42629d679a045a770
             />
           )}
 

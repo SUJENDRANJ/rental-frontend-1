@@ -9,9 +9,13 @@ import { Home } from './pages/Home';
 import { Products } from './pages/Products';
 import { ProductDetail } from './pages/ProductDetail';
 import { Favorites } from './pages/Favorites';
+<<<<<<< HEAD
 import { Notifications } from './pages/Notifications';
 import { Profile } from './pages/Profile';
 import { HostProfile } from './pages/HostProfile';
+=======
+import { Profile } from './pages/Profile';
+>>>>>>> 70f040f72447837a5ffadaf42629d679a045a770
 import { HostDashboard } from './pages/HostDashboard';
 import { HostKYC } from './pages/HostKYC';
 import { CreateProduct } from './pages/CreateProduct';
@@ -25,9 +29,31 @@ import { Toaster } from '@/components/ui/toaster';
 import { useAppSelector } from './hooks';
 
 function App() {
+<<<<<<< HEAD
   const { user } = useAppSelector((state) => state.auth);
   const isHost = user?.role === 'host';
   const isAdmin = user?.email === 'admin@renthub.com';
+=======
+  return (
+    <Provider store={store}>
+      <ThemeProvider>
+        <Router>
+          <div className="min-h-screen bg-background">
+            <Navbar />
+            
+            <main>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/product/:id" element={<ProductDetail />} />
+                <Route path="/favorites" element={<Favorites />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/host/dashboard" element={<HostDashboard />} />
+                <Route path="/host/kyc" element={<HostKYC />} />
+                <Route path="/host/create-product" element={<CreateProduct />} />
+              </Routes>
+            </main>
+>>>>>>> 70f040f72447837a5ffadaf42629d679a045a770
 
   return (
     <ThemeProvider>

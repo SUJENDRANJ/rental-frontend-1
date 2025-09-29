@@ -1,5 +1,9 @@
 import { useState, useMemo } from 'react';
+<<<<<<< HEAD
 import { Plus, Package, DollarSign, Calendar, Eye, CreditCard as Edit, Trash2, CircleAlert as AlertCircle, User } from 'lucide-react';
+=======
+import { Plus, Package, DollarSign, Calendar, Eye, CreditCard as Edit, Trash2, CircleAlert as AlertCircle } from 'lucide-react';
+>>>>>>> 70f040f72447837a5ffadaf42629d679a045a770
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';

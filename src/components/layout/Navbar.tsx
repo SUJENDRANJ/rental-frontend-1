@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import { Search, User, ShoppingCart, Menu, X, Calendar, Heart, Settings, Bell } from 'lucide-react';
+=======
+import { useState } from 'react';
+import { Search, User, ShoppingCart, Menu, X, Calendar, Heart, Settings } from 'lucide-react';
+>>>>>>> 70f040f72447837a5ffadaf42629d679a045a770
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,7 +16,10 @@ import { RoleSwitcher } from '../ui/role-switcher';
 import { Badge } from '../ui/badge';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 import { setSearchTerm } from '../../store/slices/productsSlice';
+<<<<<<< HEAD
 import { useDebounce } from '../../hooks/useDebounce';
+=======
+>>>>>>> 70f040f72447837a5ffadaf42629d679a045a770
 import { loginSuccess, logout } from '../../store/slices/authSlice';
 
 interface NavbarProps {
@@ -37,8 +45,13 @@ export const Navbar = ({ searchTerm: propSearchTerm, onSearchChange }: NavbarPro
     if (onSearchChange) {
       onSearchChange(debouncedSearchTerm);
     } else {
+<<<<<<< HEAD
       dispatch(setSearchTerm(debouncedSearchTerm));
       if (debouncedSearchTerm.trim()) {
+=======
+      dispatch(setSearchTerm(term));
+      if (term.trim()) {
+>>>>>>> 70f040f72447837a5ffadaf42629d679a045a770
         navigate('/products');
       }
     }
@@ -197,12 +210,15 @@ export const Navbar = ({ searchTerm: propSearchTerm, onSearchChange }: NavbarPro
                       Profile Settings
                     </Link>
                   </DropdownMenuItem>
+<<<<<<< HEAD
                   <DropdownMenuItem asChild>
                     <Link to="/my-rentals" className="flex items-center">
                       <Calendar className="h-4 w-4 mr-2" />
                       My Rentals
                     </Link>
                   </DropdownMenuItem>
+=======
+>>>>>>> 70f040f72447837a5ffadaf42629d679a045a770
                   <DropdownMenuItem onClick={handleLogout}>
                     Logout
                   </DropdownMenuItem>
