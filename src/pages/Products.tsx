@@ -14,7 +14,8 @@ import {
   setPriceRange,
   setSelectedFeatures,
   setAvailabilityFilter,
-  setLocationFilter
+  setLocationFilter,
+  setSearchTerm
 } from '../store/slices/productsSlice';
 import { mockProducts } from '../data/products';
 import { useMemo } from 'react';
