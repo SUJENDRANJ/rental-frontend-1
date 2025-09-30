@@ -3,16 +3,17 @@ import { Search, User, Menu, X, Plus, Package, ChartBar as BarChart3, Settings, 
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ThemeToggle } from '../ui/theme-toggle';
 import { RoleSwitcher } from '../ui/role-switcher';
 import { Badge } from '../ui/badge';
+import { AuthModal } from '../auth/AuthModal';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 import { setSearchTerm } from '../../store/slices/productsSlice';
 import { useDebounce } from '../../hooks/useDebounce';
-import { loginSuccess, logout } from '../../store/slices/authSlice';
+import { logout } from '../../store/slices/authSlice';
+import { useSupabase } from '../../hooks/useSupabase';
 
 interface HostNavbarProps {
   searchTerm?: string;
@@ -20,9 +21,11 @@ interface HostNavbarProps {
 }
 
 export const HostNavbar = ({ searchTerm: propSearchTerm, onSearchChange }: HostNavbarProps) => {
-  const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { signOut } = useSupabase();
   
   const { searchTerm: storeSearchTerm } = useAppSelector((state) => state.products);
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
@@ -47,43 +50,16 @@ export const HostNavbar = ({ searchTerm: propSearchTerm, onSearchChange }: HostN
     setLocalSearchTerm(term);
   };
 
-  const handleLogin = () => {
-    dispatch(loginSuccess({
-      id: '1',
-      name: 'John Doe',
-      email: 'john@example.com',
-      avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100',
-      role: 'host'
-    }));
-    setIsAccountOpen(false);
-  };
-
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await signOut();
     dispatch(logout());
     navigate('/');
   };
 
-  const AccountModal = () => (
-    <DialogContent className="sm:max-w-md">
-      <DialogHeader>
-        <DialogTitle>Host Account Access</DialogTitle>
-      </DialogHeader>
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <label htmlFor="email" className="text-sm font-medium">Email</label>
-          <Input id="email" type="email" placeholder="Enter your email" />
-        </div>
-        <div className="space-y-2">
-          <label htmlFor="password" className="text-sm font-medium">Password</label>
-          <Input id="password" type="password" placeholder="Enter your password" />
-        </div>
-        <div className="flex gap-2">
-          <Button className="flex-1" onClick={handleLogin}>Sign In</Button>
-          <Button variant="outline" className="flex-1">Sign Up</Button>
-        </div>
-      </div>
-    </DialogContent>
-  );
+  const openAuthModal = (mode: 'login' | 'signup') => {
+    setAuthMode(mode);
+    setIsAuthModalOpen(true);
+  };
 
   const MobileMenu = () => (
     <SheetContent side="left" className="w-80">
@@ -116,7 +92,7 @@ export const HostNavbar = ({ searchTerm: propSearchTerm, onSearchChange }: HostN
               <RoleSwitcher />
             </div>
           ) : (
-            <Button variant="outline" className="w-full justify-start" onClick={() => setIsAccountOpen(true)}>
+            <Button variant="outline" className="w-full justify-start" onClick={() => openAuthModal('login')}>
               <User className="h-4 w-4 mr-2" />
               Sign In
             </Button>
@@ -127,6 +103,7 @@ export const HostNavbar = ({ searchTerm: propSearchTerm, onSearchChange }: HostN
   );
 
   return (
+    <>
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
@@ -206,15 +183,14 @@ export const HostNavbar = ({ searchTerm: propSearchTerm, onSearchChange }: HostN
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Dialog open={isAccountOpen} onOpenChange={setIsAccountOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="ghost" size="sm" className="hidden sm:flex">
-                    <User className="h-4 w-4 mr-2" />
-                    Account
-                  </Button>
-                </DialogTrigger>
-                <AccountModal />
-              </Dialog>
+              <div className="flex items-center space-x-2">
+                <Button variant="ghost" size="sm" onClick={() => openAuthModal('login')}>
+                  Sign In
+                </Button>
+                <Button size="sm" onClick={() => openAuthModal('signup')}>
+                  Sign Up
+                </Button>
+              </div>
             )}
             
             <ThemeToggle />
@@ -222,5 +198,12 @@ export const HostNavbar = ({ searchTerm: propSearchTerm, onSearchChange }: HostN
         </div>
       </div>
     </header>
+    
+    <AuthModal
+      isOpen={isAuthModalOpen}
+      onClose={() => setIsAuthModalOpen(false)}
+      defaultMode={authMode}
+    />
+    </>
   );
 };

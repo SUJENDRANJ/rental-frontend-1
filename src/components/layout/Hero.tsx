@@ -1,14 +1,22 @@
 import { ArrowRight, Play, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
+import { AuthModal } from '../auth/AuthModal';
 import { useAppSelector } from '../../hooks';
 
 export const Hero = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const handleStartBrowsing = () => {
+    if (!isAuthenticated) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+    
     if (isAuthenticated && user?.role === 'host') {
       navigate('/host/dashboard');
     } else {
@@ -17,6 +25,7 @@ export const Hero = () => {
   };
 
   return (
+    <>
     <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -40,7 +49,7 @@ export const Hero = () => {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="group" onClick={handleStartBrowsing}>
-                Start Browsing
+                {isAuthenticated ? 'Start Browsing' : 'Get Started'}
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
               <Button variant="outline" size="lg" className="group">
@@ -112,5 +121,12 @@ export const Hero = () => {
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-l from-purple-400/20 to-pink-400/20 rounded-full blur-3xl" />
       </div>
     </section>
+    
+    <AuthModal
+      isOpen={isAuthModalOpen}
+      onClose={() => setIsAuthModalOpen(false)}
+      defaultMode="signup"
+    />
+    </>
   );
 };

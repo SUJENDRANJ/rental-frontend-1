@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './components/providers/ThemeProvider';
+import { useSupabase } from './hooks/useSupabase';
 import { Navbar } from './components/layout/Navbar';
 import { HostNavbar } from './components/layout/HostNavbar';
 import { AdminNavbar } from './components/layout/AdminNavbar';
@@ -21,13 +22,28 @@ import { MyRentals } from './pages/MyRentals';
 import { Payment } from './pages/Payment';
 import { AdminLogin } from './pages/AdminLogin';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { DatabaseSetup } from './pages/DatabaseSetup';
 import { Toaster } from '@/components/ui/toaster';
 import { useAppSelector } from './hooks';
 
 function App() {
+  const { loading: authLoading } = useSupabase();
   const { user } = useAppSelector((state) => state.auth);
   const isHost = user?.role === 'host';
   const isAdmin = user?.email === 'admin@renthub.com';
+
+  if (authLoading) {
+    return (
+      <ThemeProvider>
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading...</p>
+          </div>
+        </div>
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider>
@@ -53,6 +69,7 @@ function App() {
               <Route path="/host/create-product" element={<CreateProduct />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/database-setup" element={<DatabaseSetup />} />
             </Routes>
           </main>
 

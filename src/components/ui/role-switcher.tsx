@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from './button';
 import { Badge } from './badge';
+import { AuthModal } from '../auth/AuthModal';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 import { switchRole, logout } from '../../store/slices/authSlice';
@@ -10,9 +11,27 @@ export const RoleSwitcher = () => {
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   if (!isAuthenticated || !user) {
-    return null;
+    return (
+      <>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => setIsAuthModalOpen(true)}
+          className="hidden sm:flex"
+        >
+          <User className="h-4 w-4 mr-2" />
+          Join as Host
+        </Button>
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+          defaultMode="signup"
+        />
+      </>
+    );
   }
 
   const handleRoleSwitch = (newRole: 'renter' | 'host') => {
