@@ -17,8 +17,10 @@ import {
   setLocationFilter,
   setSearchTerm
 } from '../store/slices/productsSlice';
-import { mockProducts } from '../data/products';
 import { useMemo } from 'react';
+import { productService } from '../services/productService';
+import { transformProducts } from '../services/productTransform';
+import { Product } from '../types/product';
 
 export const Products = () => {
   const dispatch = useAppDispatch();
@@ -41,16 +43,23 @@ export const Products = () => {
   useEffect(() => {
     const loadProducts = async () => {
       dispatch(setLoading(true));
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      dispatch(setProducts(mockProducts));
-      dispatch(setLoading(false));
+      try {
+        const dbProducts = await productService.getProducts({ limit: 100 });
+        const transformedProducts = transformProducts(dbProducts as any);
+        dispatch(setProducts(transformedProducts));
+      } catch (error) {
+        console.error('Error loading products:', error);
+        dispatch(setProducts([]));
+      } finally {
+        dispatch(setLoading(false));
+      }
     };
 
     loadProducts();
   }, [dispatch]);
 
   const filteredProducts = useMemo(() => {
-    let filtered = mockProducts;
+    let filtered = products;
 
     if (searchTerm) {
       filtered = filtered.filter(product =>
@@ -114,7 +123,7 @@ export const Products = () => {
     });
 
     return filtered;
-  }, [searchTerm, selectedCategory, sortBy, sortOrder, priceRange, selectedFeatures, availabilityFilter, locationFilter]);
+  }, [products, searchTerm, selectedCategory, sortBy, sortOrder, priceRange, selectedFeatures, availabilityFilter, locationFilter]);
 
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const currentProducts = filteredProducts.slice(
