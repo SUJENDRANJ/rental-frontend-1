@@ -4,7 +4,7 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Alert, AlertDescription } from '../ui/alert';
-import { Loader2, Phone, ShieldCheck, AlertCircle } from 'lucide-react';
+import { Loader as Loader2, Phone, ShieldCheck, CircleAlert as AlertCircle } from 'lucide-react';
 import { OTPService } from '../../services/otpService';
 import { validateIndianPhoneNumber, formatPhoneForDisplay } from '../../utils/phoneValidation';
 
