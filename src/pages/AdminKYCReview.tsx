@@ -15,19 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../components/ui/dialog';
-import {
-  CheckCircle,
-  XCircle,
-  Clock,
-  AlertCircle,
-  FileText,
-  Video,
-  Phone,
-  User,
-  Mail,
-  Calendar,
-  Loader2
-} from 'lucide-react';
+import { CircleCheck as CheckCircle, Circle as XCircle, Clock, CircleAlert as AlertCircle, FileText, Video, Phone, User, Mail, Calendar, Loader as Loader2 } from 'lucide-react';
 import {
   getAllKYCSubmissions,
   approveKYC,

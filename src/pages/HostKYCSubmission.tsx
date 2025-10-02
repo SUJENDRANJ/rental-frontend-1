@@ -9,16 +9,7 @@ import { DocumentUpload } from '../components/ui/document-upload';
 import { Alert, AlertDescription } from '../components/ui/alert';
 import { Badge } from '../components/ui/badge';
 import { Separator } from '../components/ui/separator';
-import {
-  CheckCircle,
-  AlertCircle,
-  Video,
-  FileText,
-  Phone,
-  Shield,
-  ArrowLeft,
-  Loader2
-} from 'lucide-react';
+import { CircleCheck as CheckCircle, CircleAlert as AlertCircle, Video, FileText, Phone, Shield, ArrowLeft, Loader as Loader2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import {
   getKYCSubmission,
