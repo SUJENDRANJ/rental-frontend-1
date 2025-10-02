@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, User, Mail, Phone, MapPin, Camera, Upload, Save } from 'lucide-react';
+import { ArrowLeft, User, Mail, Phone, MapPin, Camera, Upload, Save, ShieldCheck } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -10,6 +10,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { useToast } from '../hooks/use-toast';
 import { useAppSelector, useAppDispatch } from '../hooks';
 import { loginSuccess } from '../store/slices/authSlice';
+import { PhoneVerification } from '../components/auth/PhoneVerification';
+import { OTPService } from '../services/otpService';
+import { Dialog, DialogContent } from '../components/ui/dialog';
+import { Badge } from '../components/ui/badge';
+import { formatPhoneForDisplay } from '../utils/phoneValidation';
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -28,8 +33,52 @@ export const Profile = () => {
     avatar: user?.avatar || ''
   });
 
+  const [showPhoneVerification, setShowPhoneVerification] = useState(false);
+  const [phoneVerified, setPhoneVerified] = useState(false);
+  const [verifiedPhone, setVerifiedPhone] = useState<string | null>(null);
+  const [loadingVerificationStatus, setLoadingVerificationStatus] = useState(true);
+
+  useEffect(() => {
+    if (user?.id) {
+      loadVerificationStatus();
+    }
+  }, [user?.id]);
+
+  const loadVerificationStatus = async () => {
+    if (!user?.id) return;
+
+    try {
+      setLoadingVerificationStatus(true);
+      const status = await OTPService.getVerificationStatus(user.id);
+      setPhoneVerified(status.isVerified);
+      if (status.phoneNumber) {
+        setVerifiedPhone(status.phoneNumber);
+        setFormData(prev => ({ ...prev, phone: status.phoneNumber || '' }));
+      }
+    } catch (error) {
+      console.error('Failed to load verification status:', error);
+    } finally {
+      setLoadingVerificationStatus(false);
+    }
+  };
+
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleVerifyPhone = () => {
+    setShowPhoneVerification(true);
+  };
+
+  const handleVerificationComplete = (phoneNumber: string) => {
+    setPhoneVerified(true);
+    setVerifiedPhone(phoneNumber);
+    setFormData(prev => ({ ...prev, phone: phoneNumber }));
+    setShowPhoneVerification(false);
+    toast({
+      title: "Phone Verified",
+      description: "Your phone number has been verified successfully.",
+    });
   };
 
   const handleSave = () => {
@@ -141,14 +190,45 @@ export const Profile = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input
-                id="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
-                placeholder="Enter your phone number"
-              />
+              <div className="flex items-center justify-between">
+                <Label htmlFor="phone">Phone Number</Label>
+                {phoneVerified && (
+                  <Badge variant="default" className="bg-green-600">
+                    <ShieldCheck className="h-3 w-3 mr-1" />
+                    Verified
+                  </Badge>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={phoneVerified && verifiedPhone ? formatPhoneForDisplay(verifiedPhone) : formData.phone}
+                  onChange={(e) => !phoneVerified && handleInputChange('phone', e.target.value)}
+                  placeholder="Enter your phone number"
+                  disabled={phoneVerified || loadingVerificationStatus}
+                  className={phoneVerified ? 'bg-green-50' : ''}
+                />
+                <Button
+                  type="button"
+                  onClick={handleVerifyPhone}
+                  variant={phoneVerified ? "outline" : "default"}
+                  disabled={loadingVerificationStatus}
+                >
+                  {loadingVerificationStatus ? (
+                    'Loading...'
+                  ) : phoneVerified ? (
+                    'Change'
+                  ) : (
+                    'Verify'
+                  )}
+                </Button>
+              </div>
+              {!phoneVerified && (
+                <p className="text-xs text-amber-600">
+                  Please verify your phone number for security
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -205,6 +285,15 @@ export const Profile = () => {
           </Button>
         </div>
       </div>
+
+      <Dialog open={showPhoneVerification} onOpenChange={setShowPhoneVerification}>
+        <DialogContent className="sm:max-w-md">
+          <PhoneVerification
+            onVerificationComplete={handleVerificationComplete}
+            onCancel={() => setShowPhoneVerification(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
