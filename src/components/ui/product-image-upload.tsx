@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Upload, X, Image as ImageIcon, AlertCircle } from 'lucide-react';
+import { Upload, X, Image as ImageIcon, CircleAlert as AlertCircle } from 'lucide-react';
 import { Button } from './button';
 import { Alert, AlertDescription } from './alert';
 import { Progress } from './progress';

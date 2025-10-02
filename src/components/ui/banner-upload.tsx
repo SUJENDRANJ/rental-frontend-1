@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Upload, X, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Upload, X, CircleAlert as AlertCircle, CircleCheck as CheckCircle2 } from 'lucide-react';
 import { Button } from './button';
 import { Card } from './card';
 import { Alert, AlertDescription } from './alert';

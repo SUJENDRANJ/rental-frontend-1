@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Video, StopCircle, Play, Upload, X } from 'lucide-react';
+import { Video, CircleStop as StopCircle, Play, Upload, X } from 'lucide-react';
 import { Button } from './button';
 import { Progress } from './progress';
 import { Alert, AlertDescription } from './alert';
