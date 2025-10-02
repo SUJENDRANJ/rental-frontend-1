@@ -19,6 +19,8 @@ import { Profile } from './pages/Profile';
 import { HostProfile } from './pages/HostProfile';
 import { HostDashboard } from './pages/HostDashboard';
 import { HostKYC } from './pages/HostKYC';
+import HostKYCSubmission from './pages/HostKYCSubmission';
+import AdminKYCReview from './pages/AdminKYCReview';
 import { CreateProduct } from './pages/CreateProduct';
 import { CompleteProfile } from './pages/CompleteProfile';
 import { HostAnalytics } from './pages/HostAnalytics';
@@ -110,9 +112,11 @@ function App() {
                   <Route path="/host/dashboard" element={<HostDashboard />} />
                   <Route path="/host/analytics" element={<HostAnalytics />} />
                   <Route path="/host/kyc" element={<HostKYC />} />
+                  <Route path="/host/kyc-submission" element={<HostKYCSubmission />} />
                   <Route path="/host/create-product" element={<CreateProduct />} />
                   <Route path="/admin/login" element={<AdminLogin />} />
                   <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                  <Route path="/admin/kyc-review" element={<AdminKYCReview />} />
                   <Route path="/database-setup" element={<DatabaseSetup />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>

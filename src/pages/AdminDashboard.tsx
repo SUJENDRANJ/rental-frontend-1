@@ -353,8 +353,13 @@ export const AdminDashboard = () => {
         </TabsContent>
 
         <TabsContent value="kyc" className="space-y-6">
-          <h2 className="text-2xl font-bold">KYC Verification Requests</h2>
-          
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">KYC Verification</h2>
+            <Button onClick={() => window.location.href = '/admin/kyc-review'}>
+              View All KYC Submissions
+            </Button>
+          </div>
+
           <div className="space-y-4">
             {mockKycRequests.map((request) => (
               <Card key={request.id}>
@@ -378,9 +383,9 @@ export const AdminDashboard = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={() => window.location.href = '/admin/kyc-review'}>
                         <Eye className="h-4 w-4 mr-2" />
                         Review
                       </Button>
